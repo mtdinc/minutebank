@@ -811,12 +811,12 @@
                 <div class="flow-step" data-step="01">
                     <div class="icon">⏱</div>
                     <h3>Study</h3>
-                    <p>Start a focus session. Minimum 25 minutes to earn rewards.</p>
+                    <p>Start a focus session. Every minute counts — earn as you go.</p>
                 </div>
                 <div class="flow-step" data-step="02">
                     <div class="icon">🪙</div>
                     <h3>Earn</h3>
-                    <p>Get minute coins based on study time × your level ratio.</p>
+                    <p>Get 1 coin per minute studied. Bonus: lucky sessions pay 1.5×.</p>
                 </div>
                 <div class="flow-step" data-step="03">
                     <div class="icon">🎯</div>
@@ -863,7 +863,7 @@
                         <span class="level-number">7</span>
                         <span class="level-label">Current Level</span>
                     </div>
-                    <div class="level-ratio">Earning <span>1.4×</span> coins per minute</div>
+                    <div class="level-ratio">Daily Goal: <span>130 min</span></div>
                 </div>
                 <div class="level-track">
                     <div class="level-pip filled"></div>
@@ -885,15 +885,15 @@
                 <div class="level-info">
                     <div class="level-info-item">
                         <h4>How to Level Up</h4>
-                        <p>Complete study sessions to earn XP. Each 25+ minute session adds to your progress.</p>
+                        <p>Complete study sessions to earn XP. 10 XP per minute studied, plus lucky session bonuses.</p>
                     </div>
                     <div class="level-info-item">
-                        <h4>Better Ratios</h4>
-                        <p>Higher levels = more coins per minute. Level 15 earns 2× what Level 1 earns.</p>
+                        <h4>Higher Stakes</h4>
+                        <p>Higher levels = higher daily study goals. Level 1 starts at 25 min; Level 15 requires 235 min.</p>
                     </div>
                     <div class="level-info-item">
-                        <h4>XP Decay</h4>
-                        <p>Skip too many days and your XP decays. Stay consistent to protect your progress.</p>
+                        <h4>Continuous XP Decay</h4>
+                        <p>XP decays in real-time when you're not studying. Stay active to protect your progress.</p>
                     </div>
                 </div>
             </div>
@@ -956,7 +956,7 @@
                 </div>
                 <div class="feature">
                     <h3>📉 XP Decay</h3>
-                    <p>Skip studying and watch your XP decay over time. The system keeps you accountable — stay consistent or lose progress.</p>
+                    <p>XP decays continuously in real-time. The longer you skip, the faster it drains (up to 3×). Study 25+ min to slow it down.</p>
                 </div>
                 <div class="feature">
                     <h3>🏋️ Hardcore Mode</h3>
@@ -964,7 +964,7 @@
                 </div>
                 <div class="feature">
                     <h3>📊 Widgets</h3>
-                    <p>Lock Screen and Home Screen widgets show your balance, current level, and active timer at a glance.</p>
+                    <p>Lock Screen widgets show your balance, current level, and active timer at a glance.</p>
                 </div>
                 <div class="feature">
                     <h3>🏷️ Tags & Categories</h3>
@@ -1178,10 +1178,10 @@
                 String(mins).padStart(2, '0') + ':' +
                 String(secs).padStart(2, '0');
 
-            // Update coins and XP (simulated)
+            // Update coins and XP (simulated) - 1:1 ratio for coins
             const totalMins = seconds / 60;
-            const coins = Math.floor(totalMins * 1.4); // Level 7 ratio
-            const xp = Math.floor(totalMins * 10);
+            const coins = Math.floor(totalMins); // 1 coin per minute (actual ratio)
+            const xp = Math.floor(totalMins * 10); // 10 XP per minute
             coinsEl.textContent = coins;
             xpEl.textContent = xp;
         }
