@@ -16,6 +16,8 @@
             --teal: #57d9bb;
             --muted: #666;
             --border: rgba(255,255,255,0.1);
+            --red: #e55;
+            --green: #5e5;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -110,12 +112,15 @@
             color: var(--muted);
             text-decoration: none;
             font-size: 0.875rem;
-            transition: color 0.2s;
+            transition: color 0.2s, transform 0.2s;
         }
 
-        .nav a:hover { color: var(--tint); }
+        .nav a:hover {
+            color: var(--tint);
+            transform: translateY(-2px);
+        }
 
-        /* How It Works */
+        /* Section Styles */
         .section { margin-bottom: 4rem; }
 
         .section-title {
@@ -136,6 +141,7 @@
             background: var(--border);
         }
 
+        /* How It Works - Flow Steps */
         .flow {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -147,6 +153,12 @@
             border: 1px solid var(--border);
             padding: 1.5rem;
             position: relative;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-4px);
+            border-color: var(--tint);
         }
 
         .flow-step::before {
@@ -176,6 +188,267 @@
             margin-bottom: 0.75rem;
         }
 
+        /* Live Demo Section */
+        .demo-section {
+            margin-bottom: 4rem;
+        }
+
+        .demo-box {
+            background: var(--bg-card);
+            border: 2px solid var(--teal);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .demo-title {
+            color: var(--teal);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-timer {
+            font-size: 3rem;
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .demo-label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-stat {
+            text-align: center;
+        }
+
+        .demo-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .demo-stat-value.coins { color: var(--tint); }
+        .demo-stat-value.xp { color: var(--teal); }
+
+        .demo-stat-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .demo-progress {
+            margin-top: 1.5rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .demo-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--teal), var(--tint));
+            animation: progress 8s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0%, 100% { width: 0%; }
+            50% { width: 100%; }
+        }
+
+        /* Level Progression */
+        .level-section {
+            margin-bottom: 4rem;
+        }
+
+        .level-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .level-current {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .level-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--tint);
+        }
+
+        .level-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .level-ratio {
+            background: var(--bg);
+            border: 1px dashed var(--teal);
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .level-ratio span {
+            color: var(--teal);
+        }
+
+        .level-track {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .level-pip {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            transition: background 0.3s;
+        }
+
+        .level-pip.filled {
+            background: var(--tint);
+        }
+
+        .level-pip.current {
+            background: var(--teal);
+            animation: levelPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes levelPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .level-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .level-info-item {
+            background: var(--bg);
+            padding: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .level-info-item h4 {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-info-item p {
+            font-size: 0.85rem;
+            color: var(--text);
+        }
+
+        /* Time Banks */
+        .banks-section {
+            margin-bottom: 4rem;
+        }
+
+        .banks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .bank-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .bank-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--teal);
+        }
+
+        .bank-card.in-debt {
+            border-color: var(--red);
+        }
+
+        .bank-card.in-debt:hover {
+            border-color: var(--red);
+        }
+
+        .bank-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .bank-icon {
+            font-size: 1.25rem;
+        }
+
+        .bank-name {
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .bank-time {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .bank-time.positive { color: var(--teal); }
+        .bank-time.negative { color: var(--red); }
+
+        .bank-status {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .bank-status.ready { color: var(--teal); }
+        .bank-status.debt { color: var(--red); }
+
+        .bank-bar {
+            height: 4px;
+            background: var(--border);
+            margin-top: 0.75rem;
+            overflow: hidden;
+        }
+
+        .bank-bar-fill {
+            height: 100%;
+            background: var(--teal);
+            transition: width 0.3s;
+        }
+
+        .bank-bar-fill.debt {
+            background: var(--red);
+        }
+
         /* Features */
         .features {
             display: grid;
@@ -187,6 +460,12 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            border-color: var(--teal);
         }
 
         .feature h3 {
@@ -209,19 +488,39 @@
             border: 2px dashed var(--tint);
             padding: 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vault-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(217, 119, 87, 0.1), transparent);
+            animation: vaultScan 3s ease-in-out infinite;
+        }
+
+        @keyframes vaultScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .vault-box h3 {
             color: var(--tint);
             font-size: 1.1rem;
             margin-bottom: 1rem;
+            position: relative;
         }
 
-        .vault-box p {
+        .vault-box > p {
             color: var(--muted);
             font-size: 0.85rem;
             max-width: 500px;
             margin: 0 auto;
+            position: relative;
         }
 
         .vault-steps {
@@ -230,6 +529,7 @@
             gap: 0.5rem;
             margin-top: 1.5rem;
             flex-wrap: wrap;
+            position: relative;
         }
 
         .vault-step {
@@ -238,11 +538,70 @@
             padding: 0.5rem 1rem;
             font-size: 0.75rem;
             color: var(--text);
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .vault-step:hover {
+            border-color: var(--tint);
+            transform: translateY(-2px);
         }
 
         .vault-step .arrow {
             color: var(--tint);
             margin-left: 0.5rem;
+        }
+
+        .vault-lock-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: lockBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes lockBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Social Section */
+        .social-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+        }
+
+        .social-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-feature {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            transition: border-color 0.2s;
+        }
+
+        .social-feature:hover {
+            border-color: var(--teal);
+        }
+
+        .social-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .social-feature h4 {
+            font-size: 0.85rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .social-feature p {
+            font-size: 0.75rem;
+            color: var(--muted);
         }
 
         /* Privacy Section */
@@ -340,6 +699,11 @@
             border: 1px solid var(--border);
             padding: 2rem;
             text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .support-box:hover {
+            border-color: var(--tint);
         }
 
         .support-box h2 {
@@ -352,10 +716,11 @@
             color: var(--tint);
             text-decoration: none;
             font-size: 1.1rem;
+            transition: color 0.2s;
         }
 
         .support-box a:hover {
-            text-decoration: underline;
+            color: var(--teal);
         }
 
         .support-box p {
@@ -393,6 +758,18 @@
 
         /* Smooth scroll */
         html { scroll-behavior: smooth; }
+
+        /* Typing animation for demo */
+        .typing-text {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2s steps(20, end) infinite alternate;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -420,6 +797,7 @@
         <!-- Navigation -->
         <nav class="nav">
             <a href="#how-it-works">How It Works</a>
+            <a href="#demo">Live Demo</a>
             <a href="#features">Features</a>
             <a href="#the-vault">The Vault</a>
             <a href="#privacy">Privacy</a>
@@ -453,33 +831,144 @@
             </div>
         </section>
 
+        <!-- Live Demo -->
+        <section id="demo" class="demo-section">
+            <h2 class="section-title">See It In Action</h2>
+            <div class="demo-box">
+                <div class="demo-title">Active Study Session</div>
+                <div class="demo-timer" id="demoTimer">00:00:00</div>
+                <div class="demo-label">Time Elapsed</div>
+                <div class="demo-stats">
+                    <div class="demo-stat">
+                        <div class="demo-stat-value coins" id="demoCoins">0</div>
+                        <div class="demo-stat-label">Coins Earned</div>
+                    </div>
+                    <div class="demo-stat">
+                        <div class="demo-stat-value xp" id="demoXP">0</div>
+                        <div class="demo-stat-label">XP Gained</div>
+                    </div>
+                </div>
+                <div class="demo-progress">
+                    <div class="demo-progress-bar"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Level Progression -->
+        <section id="levels" class="level-section">
+            <h2 class="section-title">Level Progression</h2>
+            <div class="level-box">
+                <div class="level-header">
+                    <div class="level-current">
+                        <span class="level-number">7</span>
+                        <span class="level-label">Current Level</span>
+                    </div>
+                    <div class="level-ratio">Earning <span>1.4×</span> coins per minute</div>
+                </div>
+                <div class="level-track">
+                    <div class="level-pip filled"></div>
+                    <div class="level-pip filled"></div>
+                    <div class="level-pip filled"></div>
+                    <div class="level-pip filled"></div>
+                    <div class="level-pip filled"></div>
+                    <div class="level-pip filled"></div>
+                    <div class="level-pip current"></div>
+                    <div class="level-pip"></div>
+                    <div class="level-pip"></div>
+                    <div class="level-pip"></div>
+                    <div class="level-pip"></div>
+                    <div class="level-pip"></div>
+                    <div class="level-pip"></div>
+                    <div class="level-pip"></div>
+                    <div class="level-pip"></div>
+                </div>
+                <div class="level-info">
+                    <div class="level-info-item">
+                        <h4>How to Level Up</h4>
+                        <p>Complete study sessions to earn XP. Each 25+ minute session adds to your progress.</p>
+                    </div>
+                    <div class="level-info-item">
+                        <h4>Better Ratios</h4>
+                        <p>Higher levels = more coins per minute. Level 15 earns 2× what Level 1 earns.</p>
+                    </div>
+                    <div class="level-info-item">
+                        <h4>XP Decay</h4>
+                        <p>Skip too many days and your XP decays. Stay consistent to protect your progress.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Time Banks -->
+        <section id="banks" class="banks-section">
+            <h2 class="section-title">Your Time Banks</h2>
+            <div class="banks-grid">
+                <div class="bank-card">
+                    <div class="bank-header">
+                        <span class="bank-icon">📺</span>
+                        <span class="bank-name">Netflix</span>
+                    </div>
+                    <div class="bank-time positive">45 min</div>
+                    <div class="bank-status ready">▶ Ready to use</div>
+                    <div class="bank-bar"><div class="bank-bar-fill" style="width: 75%;"></div></div>
+                </div>
+                <div class="bank-card">
+                    <div class="bank-header">
+                        <span class="bank-icon">🎮</span>
+                        <span class="bank-name">Gaming</span>
+                    </div>
+                    <div class="bank-time positive">20 min</div>
+                    <div class="bank-status ready">▶ Ready to use</div>
+                    <div class="bank-bar"><div class="bank-bar-fill" style="width: 40%;"></div></div>
+                </div>
+                <div class="bank-card in-debt">
+                    <div class="bank-header">
+                        <span class="bank-icon">📱</span>
+                        <span class="bank-name">Social Media</span>
+                    </div>
+                    <div class="bank-time negative">-15 min</div>
+                    <div class="bank-status debt">⚠ In debt — study to pay back</div>
+                    <div class="bank-bar"><div class="bank-bar-fill debt" style="width: 30%;"></div></div>
+                </div>
+                <div class="bank-card">
+                    <div class="bank-header">
+                        <span class="bank-icon">🎵</span>
+                        <span class="bank-name">YouTube</span>
+                    </div>
+                    <div class="bank-time positive">0 min</div>
+                    <div class="bank-status" style="color: var(--muted);">○ Empty — earn more coins</div>
+                    <div class="bank-bar"><div class="bank-bar-fill" style="width: 0%;"></div></div>
+                </div>
+            </div>
+        </section>
+
         <!-- Features -->
         <section id="features" class="section">
             <h2 class="section-title">Features</h2>
             <div class="features">
                 <div class="feature">
-                    <h3>📊 Level Progression</h3>
-                    <p>15 levels with improving study-to-reward ratios. Level up by accumulating XP from study sessions.</p>
-                </div>
-                <div class="feature">
-                    <h3>🏦 Time Banks</h3>
-                    <p>Create custom reward categories. Track remaining time for each. Go into debt if you must — then study to pay it back.</p>
-                </div>
-                <div class="feature">
                     <h3>⌚ Apple Watch</h3>
-                    <p>Start, pause, and complete sessions from your wrist. Full sync with your iPhone.</p>
+                    <p>Start, pause, and complete sessions from your wrist. Full sync with your iPhone. Never miss tracking a session.</p>
                 </div>
                 <div class="feature">
                     <h3>🏝️ Dynamic Island</h3>
-                    <p>Live Activities show your timer progress. Always visible, never distracting.</p>
-                </div>
-                <div class="feature">
-                    <h3>🎲 Lucky Sessions</h3>
-                    <p>Random chance for 2× coin multiplier. A little excitement to keep you going.</p>
+                    <p>Live Activities show your timer progress right on your Lock Screen and Dynamic Island. Always visible, never distracting.</p>
                 </div>
                 <div class="feature">
                     <h3>📉 XP Decay</h3>
-                    <p>Skip studying and watch your XP decay. Stay consistent or lose your level progress.</p>
+                    <p>Skip studying and watch your XP decay over time. The system keeps you accountable — stay consistent or lose progress.</p>
+                </div>
+                <div class="feature">
+                    <h3>🏋️ Hardcore Mode</h3>
+                    <p>Enable on Apple Watch to enforce focus. Walk away from your desk? Session fails. For those who need extra accountability.</p>
+                </div>
+                <div class="feature">
+                    <h3>📊 Widgets</h3>
+                    <p>Lock Screen and Home Screen widgets show your balance, current level, and active timer at a glance.</p>
+                </div>
+                <div class="feature">
+                    <h3>🏷️ Tags & Categories</h3>
+                    <p>Organize study sessions by subject or project. Track where your time actually goes with detailed breakdowns.</p>
                 </div>
             </div>
         </section>
@@ -488,8 +977,9 @@
         <section id="the-vault" class="section">
             <h2 class="section-title">The Vault</h2>
             <div class="vault-box">
-                <h3>🔒 Block Your Guilt Apps</h3>
-                <p>Select apps you find distracting. Lock them in The Vault during study sessions. Spend earned coins to unlock them for a set amount of usage time. When time runs out, they auto-lock again.</p>
+                <div class="vault-lock-icon">🔒</div>
+                <h3>Block Your Guilt Apps</h3>
+                <p>Select the apps you find most distracting. Lock them in The Vault during study sessions. When you've earned enough coins, unlock them for a set amount of usage time. When time runs out, they auto-lock again.</p>
                 <div class="vault-steps">
                     <span class="vault-step">Pick apps<span class="arrow">→</span></span>
                     <span class="vault-step">Lock vault<span class="arrow">→</span></span>
@@ -497,6 +987,36 @@
                     <span class="vault-step">Earn coins<span class="arrow">→</span></span>
                     <span class="vault-step">Unlock<span class="arrow">→</span></span>
                     <span class="vault-step">Auto-relock</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Features -->
+        <section id="social" class="section">
+            <h2 class="section-title">Study Together (Optional)</h2>
+            <div class="social-box">
+                <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">Connect with friends for extra motivation. All social features are optional — the app works fully without them.</p>
+                <div class="social-features">
+                    <div class="social-feature">
+                        <div class="social-icon">🏆</div>
+                        <h4>Leaderboards</h4>
+                        <p>See how your study time ranks among friends</p>
+                    </div>
+                    <div class="social-feature">
+                        <div class="social-icon">👥</div>
+                        <h4>Friends</h4>
+                        <p>Add friends and see their study activity</p>
+                    </div>
+                    <div class="social-feature">
+                        <div class="social-icon">⚔️</div>
+                        <h4>Challenges</h4>
+                        <p>Compete in timed study challenges</p>
+                    </div>
+                    <div class="social-feature">
+                        <div class="social-icon">📰</div>
+                        <h4>Activity Feed</h4>
+                        <p>Celebrate friends' achievements</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -577,7 +1097,7 @@
                     <p><strong>No tracking:</strong> We do not use third-party analytics, crash reporters, or advertising SDKs.</p>
                 </div>
 
-                <!-- Legal Basis (GDPR) -->
+                <!-- Why We Process -->
                 <div class="privacy-section">
                     <h3>Why We Process Your Data</h3>
                     <p><strong>Contract performance:</strong> We process your account and game data to provide the app's core services.</p>
@@ -637,8 +1157,36 @@
         <!-- Footer -->
         <footer>
             <p>Built with focus by Berfin Aydin — © 2026</p>
-            <p style="margin-top: 0.5rem;">Minute Bank for iOS</p>
+            <p style="margin-top: 0.5rem;">Minute Bank for iOS + watchOS</p>
         </footer>
     </div>
+
+    <script>
+        // Live demo timer animation
+        let seconds = 0;
+        const timerEl = document.getElementById('demoTimer');
+        const coinsEl = document.getElementById('demoCoins');
+        const xpEl = document.getElementById('demoXP');
+
+        function updateDemo() {
+            seconds++;
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            timerEl.textContent =
+                String(hrs).padStart(2, '0') + ':' +
+                String(mins).padStart(2, '0') + ':' +
+                String(secs).padStart(2, '0');
+
+            // Update coins and XP (simulated)
+            const totalMins = seconds / 60;
+            const coins = Math.floor(totalMins * 1.4); // Level 7 ratio
+            const xp = Math.floor(totalMins * 10);
+            coinsEl.textContent = coins;
+            xpEl.textContent = xp;
+        }
+
+        setInterval(updateDemo, 1000);
+    </script>
 </body>
 </html>
