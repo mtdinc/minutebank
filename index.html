@@ -103,6 +103,7 @@
             padding: 1.5rem 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 3rem;
+            flex-wrap: wrap;
         }
 
         .nav a {
@@ -301,6 +302,11 @@
             color: #e55;
         }
 
+        .privacy-col.on-device li::before {
+            content: '◉ ';
+            color: var(--teal);
+        }
+
         .privacy-note {
             background: var(--bg);
             border-left: 3px solid var(--teal);
@@ -308,6 +314,24 @@
             margin-top: 2rem;
             font-size: 0.8rem;
             color: var(--muted);
+        }
+
+        .privacy-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .privacy-section h3 {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .privacy-section p {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 0.75rem;
         }
 
         /* Support */
@@ -484,49 +508,118 @@
                 <h2>Your Data, Explained Simply<span class="terminal-cursor"></span></h2>
                 <p class="updated">Last updated: January 4, 2026</p>
 
+                <!-- Cloud Data -->
                 <div class="privacy-grid">
                     <div class="privacy-col">
-                        <h3>What We Store</h3>
+                        <h3>Cloud Data (Synced)</h3>
                         <ul>
-                            <li>Email (for login)</li>
+                            <li>Email address (for login)</li>
                             <li>Study session history</li>
-                            <li>Goals & settings</li>
-                            <li>Level & XP progress</li>
+                            <li>XP, level, and coin balance</li>
+                            <li>Goals, tags, and settings</li>
+                            <li>Username (if you set one)</li>
+                            <li>Friends list (if you use social)</li>
                         </ul>
                     </div>
+                    <div class="privacy-col on-device">
+                        <h3>On-Device Only (Never Uploaded)</h3>
+                        <ul>
+                            <li>Which apps you block (The Vault)</li>
+                            <li>App usage time for limits</li>
+                            <li>Motion data (Hardcore Mode)</li>
+                            <li>Widget and Lock Screen data</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- What We Never Collect -->
+                <div class="privacy-grid" style="margin-top: 1.5rem;">
                     <div class="privacy-col no-collect">
-                        <h3>What We Never See</h3>
+                        <h3>What We Never Collect</h3>
                         <ul>
-                            <li>Which apps you block</li>
-                            <li>Your Screen Time data</li>
-                            <li>Screenshots or recordings</li>
-                            <li>Your location</li>
+                            <li>Your GPS location</li>
+                            <li>Your contacts or photos</li>
+                            <li>Your browsing history</li>
+                            <li>Any data for advertising</li>
+                        </ul>
+                    </div>
+                    <div class="privacy-col">
+                        <h3>Authentication Options</h3>
+                        <ul>
+                            <li>Email + password</li>
+                            <li>Sign in with Apple</li>
                         </ul>
                     </div>
                 </div>
 
+                <!-- Screen Time Explanation -->
                 <div class="privacy-note">
-                    <strong>About The Vault:</strong> We use Apple's Screen Time API to let you block apps. This is 100% on-device. We cannot see which apps you select, how long you use them, or anything about your Screen Time. Apple designed it this way for privacy.
+                    <strong>About The Vault (Screen Time API):</strong> We use Apple's FamilyControls framework to let you block apps. Your app selections are stored as opaque tokens — we literally cannot see which apps you chose. Usage time is tracked locally on your device to enforce time limits, then discarded. This data never leaves your device or reaches our servers.
                 </div>
 
-                <div class="privacy-grid" style="margin-top: 2rem;">
-                    <div class="privacy-col">
-                        <h3>Data Storage</h3>
-                        <ul>
-                            <li>Cloud sync via Supabase</li>
-                            <li>Blocked apps: device only</li>
-                            <li>No third-party analytics</li>
-                            <li>No ads, ever</li>
-                        </ul>
-                    </div>
-                    <div class="privacy-col">
-                        <h3>Your Rights</h3>
-                        <ul>
-                            <li>Export your data anytime</li>
-                            <li>Delete account on request</li>
-                            <li>We respond within 48 hrs</li>
-                        </ul>
-                    </div>
+                <!-- Motion Data Explanation -->
+                <div class="privacy-note" style="margin-top: 1rem;">
+                    <strong>About Hardcore Mode (Apple Watch):</strong> If you enable Hardcore Mode, the Watch uses motion sensors (CMPedometer) to detect if you walk away during a session. Step counts are processed in real-time to verify presence and are never stored or transmitted. This feature requires your explicit permission.
+                </div>
+
+                <!-- Social Features -->
+                <div class="privacy-section">
+                    <h3>Social Features (Optional)</h3>
+                    <p>If you use social features, you can set a public username and add friends. Your username and study stats appear on leaderboards. Friends can see your activity feed (sessions completed, levels gained). You control who you add as friends.</p>
+                    <p>Social features are entirely optional. The app works fully without them.</p>
+                </div>
+
+                <!-- Data Storage & Security -->
+                <div class="privacy-section">
+                    <h3>Data Storage & Security</h3>
+                    <p><strong>Backend:</strong> Your data syncs to Supabase, a secure cloud database with row-level security. Each user can only access their own data.</p>
+                    <p><strong>Local:</strong> Device data (Vault selections, widget state) uses Apple's secure UserDefaults and App Groups.</p>
+                    <p><strong>No tracking:</strong> We do not use third-party analytics, crash reporters, or advertising SDKs.</p>
+                </div>
+
+                <!-- Legal Basis (GDPR) -->
+                <div class="privacy-section">
+                    <h3>Why We Process Your Data (Legal Basis)</h3>
+                    <p><strong>Contract performance:</strong> We process your account and game data to provide the app's core services.</p>
+                    <p><strong>Legitimate interest:</strong> We may analyze aggregated, anonymized usage patterns to improve the app.</p>
+                    <p><strong>Consent:</strong> Social features and motion tracking require your explicit opt-in.</p>
+                </div>
+
+                <!-- Your Rights -->
+                <div class="privacy-section">
+                    <h3>Your Rights (GDPR & CCPA)</h3>
+                    <p><strong>Access:</strong> Export your study history and game data from the app.</p>
+                    <p><strong>Correction:</strong> Update your profile information anytime.</p>
+                    <p><strong>Deletion:</strong> Delete your account and all cloud data via Settings.</p>
+                    <p><strong>Portability:</strong> Request a copy of your data in a standard format.</p>
+                    <p><strong>No sale of data:</strong> We do not sell, rent, or trade your personal information to third parties. Ever.</p>
+                </div>
+
+                <!-- Data Retention -->
+                <div class="privacy-section">
+                    <h3>Data Retention</h3>
+                    <p>We retain your data as long as your account is active. If you delete your account, your data is removed from our servers within 30 days. Anonymized, aggregated statistics may be retained for analytics.</p>
+                </div>
+
+                <!-- Children's Privacy -->
+                <div class="privacy-section">
+                    <h3>Children's Privacy</h3>
+                    <p>Minute Bank is designed for students of all ages. We do not knowingly collect personal information from children under 13 without parental consent. If you believe a child under 13 has provided us with personal information, please contact us.</p>
+                </div>
+
+                <!-- Changes to Policy -->
+                <div class="privacy-section">
+                    <h3>Changes to This Policy</h3>
+                    <p>We may update this policy occasionally. We'll notify you of significant changes via the app or email. Continued use after changes constitutes acceptance.</p>
+                </div>
+
+                <!-- Contact -->
+                <div class="privacy-section">
+                    <h3>Contact Us</h3>
+                    <p>For privacy questions, data requests, or to exercise your rights:</p>
+                    <p><strong>Email:</strong> <a href="mailto:dincberfinur@gmail.com" style="color: var(--tint);">dincberfinur@gmail.com</a></p>
+                    <p><strong>Data Controller:</strong> Berfin Aydin</p>
+                    <p>We respond to all requests within 48 hours.</p>
                 </div>
             </div>
         </section>
