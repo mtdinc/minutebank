@@ -752,7 +752,7 @@
 
         .log-track {
             display: inline-block;
-            animation: ticker 30s linear infinite;
+            animation: ticker 150s linear infinite; /* Slowed down to 1/5 speed */
         }
 
         .log-item {
@@ -784,12 +784,12 @@
 
     <!-- Sticky Command Bar -->
     <nav class="command-bar">
-        <div class="cmd-prompt">root@minutebank:~$</div>
+        <div class="cmd-prompt">Minute Bank<span class="cursor-blink">_</span></div>
         <div class="cmd-links">
-            <a href="#how-it-works">[HOW-IT-WORKS]</a>
-            <a href="#demo">[DEMO]</a>
-            <a href="#features">[FEATURES]</a>
-            <a href="#privacy">[PRIVACY]</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#demo">Demo</a>
+            <a href="#features">Features</a>
+            <a href="#privacy">Privacy</a>
         </div>
     </nav>
 
@@ -814,13 +814,13 @@
                 </div>
             </div>
             <p class="tagline">Study hard. <span>Earn minutes.</span> Play guilt-free.</p>
-            <div class="cta-badge">./download_ios_app.sh <span class="cursor-blink">_</span></div>
-            <div style="margin-top: 0.5rem; font-size: 0.7rem; color: var(--muted);">[ STATUS: PENDING APP STORE APPROVAL ]</div>
+            <div class="cta-badge">[ Download for iOS ]</div>
+            <div style="margin-top: 0.5rem; font-size: 0.7rem; color: var(--muted);">Coming Soon to App Store</div>
         </header>
 
         <!-- How It Works -->
         <section id="how-it-works" class="section">
-            <h2 class="typewriter-target">> EXECUTE: HOW_IT_WORKS.EXE</h2>
+            <h2 class="typewriter-target">> How It Works</h2>
             <div class="flow">
                 <div class="flow-step" data-step="01">
                     <div class="icon">⏱</div>
@@ -847,7 +847,7 @@
 
         <!-- Live Demo -->
         <section id="demo" class="demo-section section">
-            <h2 class="typewriter-target">> RUN: LIVE_SIMULATION</h2>
+            <h2 class="typewriter-target">> Live Demo</h2>
             <div class="demo-box">
                 <div class="demo-title">Active Study Session</div>
                 <div class="demo-timer" id="demoTimer">00:00:00</div>
@@ -870,7 +870,7 @@
 
         <!-- Level Progression -->
         <section id="levels" class="level-section section">
-            <h2 class="typewriter-target">> CHECK: SYSTEM_LEVEL</h2>
+            <h2 class="typewriter-target">> Level Progression</h2>
             <div class="level-box">
                 <div class="level-header">
                     <div class="level-current">
@@ -915,7 +915,7 @@
 
         <!-- Time Banks -->
         <section id="banks" class="banks-section section">
-            <h2 class="typewriter-target">> ACCESS: TIME_BANKS</h2>
+            <h2 class="typewriter-target">> Your Time Banks</h2>
             <div class="banks-grid">
                 <div class="bank-card">
                     <div class="bank-header">
@@ -958,7 +958,7 @@
 
         <!-- Features -->
         <section id="features" class="section">
-            <h2 class="typewriter-target">> LIST: MODULES</h2>
+            <h2 class="typewriter-target">> Features</h2>
             <div class="features">
                 <div class="feature">
                     <h3>⌚ Apple Watch</h3>
@@ -989,67 +989,132 @@
 
         <!-- Privacy -->
         <section id="privacy" class="section">
-            <h2 class="typewriter-target">> CAT: PRIVACY_POLICY.TXT</h2>
+            <h2 class="typewriter-target">> Privacy Policy</h2>
             <div class="privacy-card">
                 <h2>Your Data, Explained Simply<span class="cursor-blink">_</span></h2>
                 <p class="updated">Last updated: January 4, 2026</p>
 
                 <div class="privacy-content">
-                    <details open>
-                        <summary>▷ Cloud Data (Synced)</summary>
-                        <div class="privacy-grid">
-                            <div class="privacy-col">
-                                <ul>
-                                    <li>Email address (for login)</li>
-                                    <li>Study session history</li>
-                                    <li>XP, level, and coin balance</li>
-                                    <li>Goals, tags, and settings</li>
-                                    <li>Username (if you set one)</li>
-                                </ul>
-                            </div>
+                    <!-- Cloud Data -->
+                    <div class="privacy-grid">
+                        <div class="privacy-col">
+                            <h3>Cloud Data (Synced)</h3>
+                            <ul>
+                                <li>Email address (for login)</li>
+                                <li>Study session history</li>
+                                <li>XP, level, and coin balance</li>
+                                <li>Goals, tags, and settings</li>
+                                <li>Username (if you set one)</li>
+                                <li>Friends list (if you use social)</li>
+                            </ul>
                         </div>
-                    </details>
-
-                    <details>
-                        <summary>▷ On-Device Only (Never Uploaded)</summary>
-                        <div class="privacy-grid">
-                            <div class="privacy-col on-device">
-                                <ul>
-                                    <li>Which apps you block (The Vault)</li>
-                                    <li>App usage time for limits</li>
-                                    <li>Motion data (Hardcore Mode)</li>
-                                    <li>Widget and Lock Screen data</li>
-                                </ul>
-                            </div>
+                        <div class="privacy-col on-device">
+                            <h3>On-Device Only (Never Uploaded)</h3>
+                            <ul>
+                                <li>Which apps you block (The Vault)</li>
+                                <li>App usage time for limits</li>
+                                <li>Motion data (Hardcore Mode)</li>
+                                <li>Widget and Lock Screen data</li>
+                            </ul>
                         </div>
-                    </details>
-
-                    <details>
-                        <summary>▷ What We Never Collect</summary>
-                        <div class="privacy-grid">
-                            <div class="privacy-col no-collect">
-                                <ul>
-                                    <li>Your GPS location</li>
-                                    <li>Your contacts or photos</li>
-                                    <li>Your browsing history</li>
-                                    <li>Any data for advertising</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </details>
-
-                    <div class="privacy-note">
-                        <strong>About The Vault (Screen Time API):</strong> We use Apple's FamilyControls framework to let you block apps. Your app selections are stored as opaque tokens — we literally cannot see which apps you chose. Usage time is tracked locally on your device.
                     </div>
 
-                    <!-- Additional standard privacy text omitted for brevity but implied -->
+                    <!-- What We Never Collect -->
+                    <div class="privacy-grid" style="margin-top: 1.5rem;">
+                        <div class="privacy-col no-collect">
+                            <h3>What We Never Collect</h3>
+                            <ul>
+                                <li>Your GPS location</li>
+                                <li>Your contacts or photos</li>
+                                <li>Your browsing history</li>
+                                <li>Any data for advertising</li>
+                            </ul>
+                        </div>
+                        <div class="privacy-col">
+                            <h3>Authentication Options</h3>
+                            <ul>
+                                <li>Email + password</li>
+                                <li>Sign in with Apple</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Screen Time Explanation -->
+                    <div class="privacy-note">
+                        <strong>About The Vault (Screen Time API):</strong> We use Apple's FamilyControls framework to let you block apps. Your app selections are stored as opaque tokens — we literally cannot see which apps you chose. Usage time is tracked locally on your device to enforce time limits, then discarded. This data never leaves your device or reaches our servers.
+                    </div>
+
+                    <!-- Motion Data Explanation -->
+                    <div class="privacy-note" style="margin-top: 1rem;">
+                        <strong>About Hardcore Mode (Apple Watch):</strong> If you enable Hardcore Mode, the Watch uses motion sensors (CMPedometer) to detect if you walk away during a session. Step counts are processed in real-time to verify presence and are never stored or transmitted. This feature requires your explicit permission.
+                    </div>
+
+                    <!-- Social Features -->
+                    <div class="privacy-section">
+                        <h3>Social Features (Optional)</h3>
+                        <p>If you use social features, you can set a public username and add friends. Your username and study stats appear on leaderboards. Friends can see your activity feed (sessions completed, levels gained). You control who you add as friends.</p>
+                        <p>Social features are entirely optional. The app works fully without them.</p>
+                    </div>
+
+                    <!-- Data Storage & Security -->
+                    <div class="privacy-section">
+                        <h3>Data Storage & Security</h3>
+                        <p><strong>Backend:</strong> Your data syncs to Supabase, a secure cloud database with row-level security. Each user can only access their own data.</p>
+                        <p><strong>Local:</strong> Device data (Vault selections, widget state) uses Apple's secure UserDefaults and App Groups.</p>
+                        <p><strong>No tracking:</strong> We do not use third-party analytics, crash reporters, or advertising SDKs.</p>
+                    </div>
+
+                    <!-- Why We Process -->
+                    <div class="privacy-section">
+                        <h3>Why We Process Your Data</h3>
+                        <p><strong>Contract performance:</strong> We process your account and game data to provide the app's core services.</p>
+                        <p><strong>Legitimate interest:</strong> We may analyze aggregated, anonymized usage patterns to improve the app.</p>
+                        <p><strong>Consent:</strong> Social features and motion tracking require your explicit opt-in.</p>
+                    </div>
+
+                    <!-- Your Rights -->
+                    <div class="privacy-section">
+                        <h3>Your Rights (GDPR & CCPA)</h3>
+                        <p><strong>Access:</strong> Export your study history and game data from the app.</p>
+                        <p><strong>Correction:</strong> Update your profile information anytime.</p>
+                        <p><strong>Deletion:</strong> Delete your account and all cloud data via Settings.</p>
+                        <p><strong>Portability:</strong> Request a copy of your data in a standard format.</p>
+                        <p><strong>No sale of data:</strong> We do not sell, rent, or trade your personal information to third parties. Ever.</p>
+                    </div>
+
+                    <!-- Data Retention -->
+                    <div class="privacy-section">
+                        <h3>Data Retention</h3>
+                        <p>We retain your data as long as your account is active. If you delete your account, your data is removed from our servers within 30 days. Anonymized, aggregated statistics may be retained for analytics.</p>
+                    </div>
+
+                    <!-- Children's Privacy -->
+                    <div class="privacy-section">
+                        <h3>Children's Privacy</h3>
+                        <p>Minute Bank is designed for students of all ages. We do not knowingly collect personal information from children under 13 without parental consent. If you believe a child under 13 has provided us with personal information, please contact us.</p>
+                    </div>
+
+                    <!-- Changes to Policy -->
+                    <div class="privacy-section">
+                        <h3>Changes to This Policy</h3>
+                        <p>We may update this policy occasionally. We'll notify you of significant changes via the app or email. Continued use after changes constitutes acceptance.</p>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="privacy-section">
+                        <h3>Contact Us</h3>
+                        <p>For privacy questions, data requests, or to exercise your rights:</p>
+                        <p><strong>Email:</strong> <a href="mailto:dincberfinur@gmail.com" style="color: var(--tint);">dincberfinur@gmail.com</a></p>
+                        <p><strong>Data Controller:</strong> Berfin Aydin</p>
+                        <p>We respond to all requests within 48 hours.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Support -->
         <section id="support" class="section">
-            <h2 class="typewriter-target">> CONNECT: SUPPORT_CHANNEL</h2>
+            <h2 class="typewriter-target">> Support</h2>
             <div class="support-box">
                 <h2>Questions? Bugs? Ideas?</h2>
                 <a href="mailto:dincberfinur@gmail.com">dincberfinur@gmail.com</a>
@@ -1139,13 +1204,13 @@
         
         // --- SYSTEM LOG TICKER ---
         const logMessages = [
-            "USER_4492 EARNED 25 COINS",
-            "NEW HIGH SCORE: LEVEL 12 REACHED",
-            "SERVER_STATUS: ONLINE",
-            "DECAY_RATE: 1.0X (NORMAL)",
-            "USER_881 JUST UNLOCKED 'NETFLIX'",
-            "SYNC_COMPLETE: US-EAST-1",
-            "USER_102 COMPLETED 50 MIN SESSION"
+            "User_4492 earned 25 coins",
+            "New High Score: Level 12 reached",
+            "System Status: Online",
+            "Decay Rate: 1.0x (Normal)",
+            "User_881 just unlocked 'Netflix'",
+            "Data Synced",
+            "User_102 completed 50 min session"
         ];
         
         const logTrack = document.getElementById('logTrack');
