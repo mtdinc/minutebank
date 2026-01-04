@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minute Bank - Gamified Study Timer</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #e8e8e8;
+            --tint: #d97757;
+            --muted: #888;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 { color: var(--tint); margin: 1.5rem 0 0.75rem; }
+        h1 { font-size: 2rem; border-bottom: 2px dashed var(--tint); padding-bottom: 0.5rem; }
+        h2 { font-size: 1.25rem; }
+        p, li { margin-bottom: 0.75rem; }
+        ul { padding-left: 1.5rem; }
+        a { color: var(--tint); }
+        .section {
+            border: 1px solid #333;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .muted { color: var(--muted); font-size: 0.875rem; }
+        .nav { margin-bottom: 2rem; }
+        .nav a { margin-right: 1rem; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#support">Support</a>
+    </nav>
+
+    <h1>Minute Bank</h1>
+    <p>A gamified study timer for students who want to earn guilt-free fun time.</p>
+
+    <section id="about" class="section">
+        <h2>About the App</h2>
+        <p>Minute Bank helps students overcome procrastination through gamified accountability:</p>
+        <ul>
+            <li><strong>Study</strong> — Complete focused study sessions (25+ minutes)</li>
+            <li><strong>Earn</strong> — Get "minute coins" based on your study time</li>
+            <li><strong>Spend</strong> — Unlock rewards like shows, games, or social media</li>
+            <li><strong>Focus</strong> — Optionally block distracting apps during study</li>
+        </ul>
+    </section>
+
+    <section id="privacy" class="section">
+        <h2>Privacy Policy</h2>
+        <p class="muted">Last updated: January 4, 2026</p>
+
+        <h3>Data We Collect</h3>
+        <ul>
+            <li><strong>Account info:</strong> Email address (for login via Supabase Auth)</li>
+            <li><strong>Study data:</strong> Session timestamps, durations, tags, and earned rewards</li>
+            <li><strong>App preferences:</strong> Settings, goals, and customization choices</li>
+        </ul>
+
+        <h3>Data We Do NOT Collect</h3>
+        <ul>
+            <li>Which specific apps you block or use</li>
+            <li>Screen Time or usage statistics</li>
+            <li>Screenshots or screen recordings</li>
+            <li>Location data</li>
+        </ul>
+
+        <h3>Screen Time API</h3>
+        <p>Minute Bank uses Apple's Screen Time API to let you block distracting apps during study sessions. This feature is entirely optional and self-directed. All app blocking data stays on your device — we cannot see which apps you block or how long you use them.</p>
+
+        <h3>Data Storage</h3>
+        <p>Your study data syncs to Supabase (cloud database) so you can access it across devices. Your blocked app selections stay on-device only.</p>
+
+        <h3>Data Sharing</h3>
+        <p>We do not sell, rent, or share your personal data with third parties. We do not display ads.</p>
+
+        <h3>Data Deletion</h3>
+        <p>You can delete your account and all associated data by contacting us at the email below.</p>
+
+        <h3>Children's Privacy</h3>
+        <p>Minute Bank is designed for students of all ages. We do not knowingly collect data from children under 13 without parental consent.</p>
+    </section>
+
+    <section id="support" class="section">
+        <h2>Support</h2>
+        <p>Having issues or questions? Contact us:</p>
+        <p><strong>Email:</strong> <a href="mailto:dincberfinur@gmail.com">dincberfinur@gmail.com</a></p>
+        <p class="muted">We typically respond within 48 hours.</p>
+    </section>
+
+    <footer class="muted" style="margin-top: 2rem; text-align: center;">
+        <p>&copy; 2026 Berfin Aydin. All rights reserved.</p>
+    </footer>
+</body>
+</html>
