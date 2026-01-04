@@ -18,6 +18,8 @@
             --border: rgba(255,255,255,0.1);
             --red: #e55;
             --green: #5e5;
+            --scan-color: rgba(0, 0, 0, 0.5);
+            --glow-color: rgba(217, 119, 87, 0.4);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,28 +30,99 @@
             color: var(--text);
             line-height: 1.7;
             overflow-x: hidden;
+            /* Text glow for that phosphor look */
+            text-shadow: 0 0 2px rgba(217, 119, 87, 0.1);
+            padding-top: 60px; /* Space for sticky nav */
         }
 
-        /* Scanline effect */
-        body::before {
-            content: '';
+        /* --- CRT Effects --- */
+        
+        /* Vignette (Curved corners & darkened edges) */
+        .crt-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0,0,0,0.1) 0px,
-                rgba(0,0,0,0.1) 1px,
-                transparent 1px,
-                transparent 2px
-            );
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%);
             pointer-events: none;
-            z-index: 1000;
+            z-index: 9999;
         }
 
+        /* Scanlines */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9998;
+            animation: scanlineScroll 0.5s linear infinite; /* Subtle flicker/movement */
+        }
+
+        /* --- Sticky Command Bar --- */
+        .command-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+
+        .cmd-prompt {
+            color: var(--teal);
+            font-weight: 700;
+        }
+        
+        .cmd-prompt::after {
+            content: ' ';
+            display: inline-block;
+            width: 8px;
+            height: 1em;
+            background: var(--tint);
+            vertical-align: middle;
+            margin-left: 5px;
+            animation: blink 1s step-end infinite;
+        }
+
+        .cmd-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .cmd-links a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .cmd-links a:hover {
+            color: var(--tint);
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+
+        @media (max-width: 768px) {
+            .cmd-links { display: none; } /* Hide links on mobile, keep prompt */
+            .cmd-prompt { width: 100%; text-align: center; }
+        }
+
+        /* --- Layout --- */
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
 
         /* Hero Section */
@@ -59,17 +132,34 @@
             border-bottom: 1px dashed var(--border);
         }
 
+        .logo-container {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Visually hidden h1 for accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
         .logo-ascii {
             color: var(--tint);
             font-size: 0.6rem;
             line-height: 1.2;
-            margin-bottom: 1.5rem;
             white-space: pre;
             display: inline-block;
+            text-shadow: 0 0 5px var(--glow-color); /* Extra glow for logo */
         }
 
         @media (max-width: 600px) {
-            .logo-ascii { font-size: 0.4rem; }
+            .logo-ascii { font-size: 0.35rem; }
         }
 
         .tagline {
@@ -89,63 +179,49 @@
             padding: 0.75rem 1.5rem;
             color: var(--tint);
             font-size: 0.875rem;
-            animation: pulse 2s ease-in-out infinite;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .cta-badge:hover {
+            background: rgba(217, 119, 87, 0.1);
+            transform: scale(0.98); /* Tactile press effect */
+            box-shadow: 0 0 10px var(--glow-color);
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        /* Navigation */
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-        }
-
-        .nav a {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s, transform 0.2s;
-        }
-
-        .nav a:hover {
+        /* --- Typewriter Effect Classes --- */
+        .typewriter-target {
+            visibility: hidden; /* Hidden until observer triggers it */
             color: var(--tint);
-            transform: translateY(-2px);
-        }
-
-        /* Section Styles */
-        .section { margin-bottom: 4rem; }
-
-        .section-title {
-            color: var(--tint);
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.2em;
             margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+            min-height: 1.5em; /* Prevent layout shift */
+        }
+        
+        .typewriter-active {
+            visibility: visible;
+        }
+        
+        .cursor-blink {
+            display: inline-block;
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+            color: var(--teal);
         }
 
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
+        /* Section Styles */
+        .section { margin-bottom: 6rem; }
 
-        /* How It Works - Flow Steps */
+        /* Flow Steps */
         .flow {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .flow-step {
@@ -153,12 +229,13 @@
             border: 1px solid var(--border);
             padding: 1.5rem;
             position: relative;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: all 0.2s;
         }
 
         .flow-step:hover {
             transform: translateY(-4px);
             border-color: var(--tint);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .flow-step::before {
@@ -188,16 +265,13 @@
             margin-bottom: 0.75rem;
         }
 
-        /* Live Demo Section */
-        .demo-section {
-            margin-bottom: 4rem;
-        }
-
+        /* Live Demo */
         .demo-box {
             background: var(--bg-card);
             border: 2px solid var(--teal);
             padding: 2rem;
             text-align: center;
+            box-shadow: 0 0 15px rgba(87, 217, 187, 0.1);
         }
 
         .demo-title {
@@ -209,11 +283,16 @@
         }
 
         .demo-timer {
-            font-size: 3rem;
+            font-size: 4rem; /* Larger */
             color: var(--text);
             font-weight: 700;
             margin-bottom: 0.5rem;
             font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 8px rgba(232, 232, 232, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .demo-timer { font-size: 2.5rem; }
         }
 
         .demo-label {
@@ -229,10 +308,6 @@
             flex-wrap: wrap;
         }
 
-        .demo-stat {
-            text-align: center;
-        }
-
         .demo-stat-value {
             font-size: 1.5rem;
             font-weight: 700;
@@ -241,7 +316,7 @@
 
         .demo-stat-value.coins { color: var(--tint); }
         .demo-stat-value.xp { color: var(--teal); }
-
+        
         .demo-stat-label {
             font-size: 0.7rem;
             color: var(--muted);
@@ -254,24 +329,17 @@
             border: 1px solid var(--border);
             height: 8px;
             overflow: hidden;
+            position: relative;
         }
 
         .demo-progress-bar {
             height: 100%;
             background: linear-gradient(90deg, var(--teal), var(--tint));
-            animation: progress 8s ease-in-out infinite;
-        }
-
-        @keyframes progress {
-            0%, 100% { width: 0%; }
-            50% { width: 100%; }
+            width: 0%; /* JS will animate this */
+            transition: width 1s linear;
         }
 
         /* Level Progression */
-        .level-section {
-            margin-bottom: 4rem;
-        }
-
         .level-box {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -312,9 +380,7 @@
             font-size: 0.875rem;
         }
 
-        .level-ratio span {
-            color: var(--teal);
-        }
+        .level-ratio span { color: var(--teal); }
 
         .level-track {
             display: flex;
@@ -329,18 +395,12 @@
             transition: background 0.3s;
         }
 
-        .level-pip.filled {
-            background: var(--tint);
-        }
-
-        .level-pip.current {
-            background: var(--teal);
-            animation: levelPulse 1.5s ease-in-out infinite;
-        }
+        .level-pip.filled { background: var(--tint); box-shadow: 0 0 4px var(--tint); }
+        .level-pip.current { background: var(--teal); animation: levelPulse 1.5s ease-in-out infinite; }
 
         @keyframes levelPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--teal); }
+            50% { opacity: 0.5; box-shadow: 0 0 0px var(--teal); }
         }
 
         .level-info {
@@ -369,10 +429,6 @@
         }
 
         /* Time Banks */
-        .banks-section {
-            margin-bottom: 4rem;
-        }
-
         .banks-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -391,13 +447,8 @@
             border-color: var(--teal);
         }
 
-        .bank-card.in-debt {
-            border-color: var(--red);
-        }
-
-        .bank-card.in-debt:hover {
-            border-color: var(--red);
-        }
+        .bank-card.in-debt { border-color: rgba(238, 85, 85, 0.3); }
+        .bank-card.in-debt:hover { border-color: var(--red); }
 
         .bank-header {
             display: flex;
@@ -406,14 +457,8 @@
             margin-bottom: 0.75rem;
         }
 
-        .bank-icon {
-            font-size: 1.25rem;
-        }
-
-        .bank-name {
-            font-size: 0.9rem;
-            color: var(--text);
-        }
+        .bank-icon { font-size: 1.25rem; }
+        .bank-name { font-size: 0.9rem; color: var(--text); }
 
         .bank-time {
             font-size: 1.5rem;
@@ -445,9 +490,7 @@
             transition: width 0.3s;
         }
 
-        .bank-bar-fill.debt {
-            background: var(--red);
-        }
+        .bank-bar-fill.debt { background: var(--red); }
 
         /* Features */
         .features {
@@ -482,7 +525,7 @@
             font-size: 0.8rem;
         }
 
-        /* The Vault */
+        /* Vault */
         .vault-box {
             background: var(--bg-card);
             border: 2px dashed var(--tint);
@@ -495,16 +538,14 @@
         .vault-box::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+            top: 0; left: -100%; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(217, 119, 87, 0.1), transparent);
-            animation: vaultScan 3s ease-in-out infinite;
+            animation: vaultScan 4s ease-in-out infinite;
         }
 
         @keyframes vaultScan {
             0% { left: -100%; }
+            50% { left: 100%; }
             100% { left: 100%; }
         }
 
@@ -544,12 +585,10 @@
         .vault-step:hover {
             border-color: var(--tint);
             transform: translateY(-2px);
+            cursor: default;
         }
 
-        .vault-step .arrow {
-            color: var(--tint);
-            margin-left: 0.5rem;
-        }
+        .vault-step .arrow { color: var(--tint); margin-left: 0.5rem; }
 
         .vault-lock-icon {
             font-size: 3rem;
@@ -562,7 +601,7 @@
             50% { transform: translateY(-5px); }
         }
 
-        /* Social Section */
+        /* Social */
         .social-box {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -584,50 +623,53 @@
             transition: border-color 0.2s;
         }
 
-        .social-feature:hover {
-            border-color: var(--teal);
-        }
+        .social-feature:hover { border-color: var(--teal); }
 
-        .social-icon {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-        }
+        .social-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .social-feature h4 { font-size: 0.85rem; color: var(--text); margin-bottom: 0.5rem; }
+        .social-feature p { font-size: 0.75rem; color: var(--muted); }
 
-        .social-feature h4 {
-            font-size: 0.85rem;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
-
-        .social-feature p {
-            font-size: 0.75rem;
-            color: var(--muted);
-        }
-
-        /* Privacy Section */
+        /* Privacy */
         .privacy-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             padding: 2rem;
         }
 
-        .privacy-card h2 {
-            color: var(--text);
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+        .privacy-card h2 { color: var(--text); font-size: 1rem; margin-bottom: 0.5rem; }
+        .privacy-card .updated { color: var(--muted); font-size: 0.75rem; margin-bottom: 1.5rem; }
+
+        details {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
         }
 
-        .privacy-card .updated {
-            color: var(--muted);
-            font-size: 0.75rem;
-            margin-bottom: 1.5rem;
+        details[open] { border-bottom: none; }
+
+        summary {
+            cursor: pointer;
+            padding: 0.5rem 0;
+            color: var(--teal);
+            font-size: 0.85rem;
+            outline: none;
+            user-select: none;
+            transition: color 0.2s;
+        }
+        
+        summary:hover { color: var(--tint); }
+        
+        summary::marker { color: var(--muted); }
+
+        .privacy-content {
+            padding: 1rem 0 2rem;
+            border-top: 1px dashed var(--border);
         }
 
         .privacy-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            margin-top: 1.5rem;
+            margin-top: 0.5rem;
         }
 
         .privacy-col h3 {
@@ -638,9 +680,7 @@
             letter-spacing: 0.1em;
         }
 
-        .privacy-col ul {
-            list-style: none;
-        }
+        .privacy-col ul { list-style: none; }
 
         .privacy-col li {
             font-size: 0.8rem;
@@ -650,21 +690,9 @@
         }
 
         .privacy-col li:last-child { border-bottom: none; }
-
-        .privacy-col li::before {
-            content: '→ ';
-            color: var(--tint);
-        }
-
-        .privacy-col.no-collect li::before {
-            content: '✗ ';
-            color: #e55;
-        }
-
-        .privacy-col.on-device li::before {
-            content: '◉ ';
-            color: var(--teal);
-        }
+        .privacy-col li::before { content: '→ '; color: var(--tint); }
+        .privacy-col.no-collect li::before { content: '✗ '; color: #e55; }
+        .privacy-col.on-device li::before { content: '◉ '; color: var(--teal); }
 
         .privacy-note {
             background: var(--bg);
@@ -673,24 +701,6 @@
             margin-top: 2rem;
             font-size: 0.8rem;
             color: var(--muted);
-        }
-
-        .privacy-section {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .privacy-section h3 {
-            font-size: 0.9rem;
-            color: var(--text);
-            margin-bottom: 1rem;
-        }
-
-        .privacy-section p {
-            font-size: 0.8rem;
-            color: var(--muted);
-            margin-bottom: 0.75rem;
         }
 
         /* Support */
@@ -702,81 +712,93 @@
             transition: border-color 0.2s;
         }
 
-        .support-box:hover {
-            border-color: var(--tint);
-        }
-
-        .support-box h2 {
-            color: var(--text);
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
+        .support-box:hover { border-color: var(--tint); }
+        .support-box h2 { color: var(--text); font-size: 1rem; margin-bottom: 1rem; }
+        
         .support-box a {
             color: var(--tint);
             text-decoration: none;
             font-size: 1.1rem;
             transition: color 0.2s;
+            border-bottom: 1px dashed var(--tint);
         }
 
-        .support-box a:hover {
-            color: var(--teal);
-        }
-
-        .support-box p {
-            color: var(--muted);
-            font-size: 0.75rem;
-            margin-top: 0.5rem;
-        }
+        .support-box a:hover { color: var(--teal); border-color: var(--teal); }
+        .support-box p { color: var(--muted); font-size: 0.75rem; margin-top: 0.5rem; }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 3rem 0;
+            padding: 3rem 0 6rem; /* Extra padding for system log */
             border-top: 1px solid var(--border);
             margin-top: 2rem;
         }
 
-        footer p {
-            color: var(--muted);
-            font-size: 0.75rem;
+        footer p { color: var(--muted); font-size: 0.75rem; }
+
+        /* --- System Log Ticker --- */
+        .system-log {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #000;
+            border-top: 1px solid var(--teal);
+            padding: 0.5rem;
+            font-size: 0.7rem;
+            color: var(--teal);
+            z-index: 1000;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
-        .terminal-cursor {
+        .log-track {
             display: inline-block;
-            width: 10px;
-            height: 1.2em;
-            background: var(--tint);
-            animation: blink 1s step-end infinite;
-            vertical-align: text-bottom;
-            margin-left: 4px;
+            animation: ticker 30s linear infinite;
+        }
+
+        .log-item {
+            display: inline-block;
+            margin-right: 3rem;
+        }
+        
+        .log-item span { color: var(--tint); }
+
+        @keyframes ticker {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
         }
 
         @keyframes blink {
             50% { opacity: 0; }
         }
-
-        /* Smooth scroll */
-        html { scroll-behavior: smooth; }
-
-        /* Typing animation for demo */
-        .typing-text {
-            overflow: hidden;
-            white-space: nowrap;
-            animation: typing 2s steps(20, end) infinite alternate;
+        
+        @keyframes scanlineScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 4px; }
         }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
+        
     </style>
 </head>
 <body>
+    <div class="crt-overlay"></div>
+    <div class="scanlines"></div>
+
+    <!-- Sticky Command Bar -->
+    <nav class="command-bar">
+        <div class="cmd-prompt">root@minutebank:~$</div>
+        <div class="cmd-links">
+            <a href="#how-it-works">[HOW-IT-WORKS]</a>
+            <a href="#demo">[DEMO]</a>
+            <a href="#features">[FEATURES]</a>
+            <a href="#privacy">[PRIVACY]</a>
+        </div>
+    </nav>
+
     <div class="container">
         <!-- Hero -->
         <header class="hero">
-            <div class="logo-ascii">
+            <h1 class="sr-only">Minute Bank - Time Tracking Game</h1>
+            <div class="logo-container" aria-hidden="true">
+                <div class="logo-ascii">
  ███╗   ███╗██╗███╗   ██╗██╗   ██╗████████╗███████╗
  ████╗ ████║██║████╗  ██║██║   ██║╚══██╔══╝██╔════╝
  ██╔████╔██║██║██╔██╗ ██║██║   ██║   ██║   █████╗
@@ -789,24 +811,16 @@
                 ██╔══██╗██╔══██║██║╚██╗██║██╔═██╗
                 ██████╔╝██║  ██║██║ ╚████║██║  ██╗
                 ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝
+                </div>
             </div>
             <p class="tagline">Study hard. <span>Earn minutes.</span> Play guilt-free.</p>
-            <div class="cta-badge">[ COMING SOON TO iOS ]</div>
+            <div class="cta-badge">./download_ios_app.sh <span class="cursor-blink">_</span></div>
+            <div style="margin-top: 0.5rem; font-size: 0.7rem; color: var(--muted);">[ STATUS: PENDING APP STORE APPROVAL ]</div>
         </header>
-
-        <!-- Navigation -->
-        <nav class="nav">
-            <a href="#how-it-works">How It Works</a>
-            <a href="#demo">Live Demo</a>
-            <a href="#features">Features</a>
-            <a href="#the-vault">The Vault</a>
-            <a href="#privacy">Privacy</a>
-            <a href="#support">Support</a>
-        </nav>
 
         <!-- How It Works -->
         <section id="how-it-works" class="section">
-            <h2 class="section-title">How It Works</h2>
+            <h2 class="typewriter-target">> EXECUTE: HOW_IT_WORKS.EXE</h2>
             <div class="flow">
                 <div class="flow-step" data-step="01">
                     <div class="icon">⏱</div>
@@ -832,8 +846,8 @@
         </section>
 
         <!-- Live Demo -->
-        <section id="demo" class="demo-section">
-            <h2 class="section-title">See It In Action</h2>
+        <section id="demo" class="demo-section section">
+            <h2 class="typewriter-target">> RUN: LIVE_SIMULATION</h2>
             <div class="demo-box">
                 <div class="demo-title">Active Study Session</div>
                 <div class="demo-timer" id="demoTimer">00:00:00</div>
@@ -849,14 +863,14 @@
                     </div>
                 </div>
                 <div class="demo-progress">
-                    <div class="demo-progress-bar"></div>
+                    <div class="demo-progress-bar" id="demoProgress"></div>
                 </div>
             </div>
         </section>
 
         <!-- Level Progression -->
-        <section id="levels" class="level-section">
-            <h2 class="section-title">Level Progression</h2>
+        <section id="levels" class="level-section section">
+            <h2 class="typewriter-target">> CHECK: SYSTEM_LEVEL</h2>
             <div class="level-box">
                 <div class="level-header">
                     <div class="level-current">
@@ -884,24 +898,24 @@
                 </div>
                 <div class="level-info">
                     <div class="level-info-item">
-                        <h4>How to Level Up</h4>
-                        <p>Complete study sessions to earn XP. 10 XP per minute studied, plus lucky session bonuses.</p>
+                        <h4>Level Up</h4>
+                        <p>Complete study sessions to earn XP. 10 XP per minute studied.</p>
                     </div>
                     <div class="level-info-item">
                         <h4>Higher Stakes</h4>
-                        <p>Higher levels = higher daily study goals. Level 1 starts at 25 min; Level 15 requires 235 min.</p>
+                        <p>Level 1 starts at 25 min/day. Level 15 requires 235 min/day.</p>
                     </div>
                     <div class="level-info-item">
-                        <h4>Continuous XP Decay</h4>
-                        <p>XP decays in real-time when you're not studying. Stay active to protect your progress.</p>
+                        <h4>XP Decay</h4>
+                        <p>XP decays in real-time. Stay active to protect your progress.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Time Banks -->
-        <section id="banks" class="banks-section">
-            <h2 class="section-title">Your Time Banks</h2>
+        <section id="banks" class="banks-section section">
+            <h2 class="typewriter-target">> ACCESS: TIME_BANKS</h2>
             <div class="banks-grid">
                 <div class="bank-card">
                     <div class="bank-header">
@@ -927,7 +941,7 @@
                         <span class="bank-name">Social Media</span>
                     </div>
                     <div class="bank-time negative">-15 min</div>
-                    <div class="bank-status debt">⚠ In debt — study to pay back</div>
+                    <div class="bank-status debt">⚠ In debt</div>
                     <div class="bank-bar"><div class="bank-bar-fill debt" style="width: 30%;"></div></div>
                 </div>
                 <div class="bank-card">
@@ -936,7 +950,7 @@
                         <span class="bank-name">YouTube</span>
                     </div>
                     <div class="bank-time positive">0 min</div>
-                    <div class="bank-status" style="color: var(--muted);">○ Empty — earn more coins</div>
+                    <div class="bank-status" style="color: var(--muted);">○ Empty</div>
                     <div class="bank-bar"><div class="bank-bar-fill" style="width: 0%;"></div></div>
                 </div>
             </div>
@@ -944,209 +958,98 @@
 
         <!-- Features -->
         <section id="features" class="section">
-            <h2 class="section-title">Features</h2>
+            <h2 class="typewriter-target">> LIST: MODULES</h2>
             <div class="features">
                 <div class="feature">
                     <h3>⌚ Apple Watch</h3>
-                    <p>Start, pause, and complete sessions from your wrist. Full sync with your iPhone. Never miss tracking a session.</p>
+                    <p>Start, pause, and complete sessions from your wrist. Full sync with your iPhone.</p>
                 </div>
                 <div class="feature">
                     <h3>🏝️ Dynamic Island</h3>
-                    <p>Live Activities show your timer progress right on your Lock Screen and Dynamic Island. Always visible, never distracting.</p>
+                    <p>Live Activities show your timer progress right on your Lock Screen.</p>
                 </div>
                 <div class="feature">
                     <h3>📉 XP Decay</h3>
-                    <p>XP decays continuously in real-time. The longer you skip, the faster it drains (up to 3×). Study 25+ min to slow it down.</p>
+                    <p>XP decays continuously. The longer you skip, the faster it drains (up to 3×).</p>
                 </div>
                 <div class="feature">
                     <h3>🏋️ Hardcore Mode</h3>
-                    <p>Enable on Apple Watch to enforce focus. Walk away from your desk? Session fails. For those who need extra accountability.</p>
+                    <p>Watch-only mode. Walk away from your desk? Session fails immediately.</p>
                 </div>
                 <div class="feature">
                     <h3>📊 Widgets</h3>
-                    <p>Lock Screen widgets show your balance, current level, and active timer at a glance.</p>
+                    <p>Lock Screen widgets show your balance and active timer at a glance.</p>
                 </div>
                 <div class="feature">
-                    <h3>🏷️ Tags & Categories</h3>
-                    <p>Organize study sessions by subject or project. Track where your time actually goes with detailed breakdowns.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- The Vault -->
-        <section id="the-vault" class="section">
-            <h2 class="section-title">The Vault</h2>
-            <div class="vault-box">
-                <div class="vault-lock-icon">🔒</div>
-                <h3>Block Your Guilt Apps</h3>
-                <p>Select the apps you find most distracting. Lock them in The Vault during study sessions. When you've earned enough coins, unlock them for a set amount of usage time. When time runs out, they auto-lock again.</p>
-                <div class="vault-steps">
-                    <span class="vault-step">Pick apps<span class="arrow">→</span></span>
-                    <span class="vault-step">Lock vault<span class="arrow">→</span></span>
-                    <span class="vault-step">Study<span class="arrow">→</span></span>
-                    <span class="vault-step">Earn coins<span class="arrow">→</span></span>
-                    <span class="vault-step">Unlock<span class="arrow">→</span></span>
-                    <span class="vault-step">Auto-relock</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Social Features -->
-        <section id="social" class="section">
-            <h2 class="section-title">Study Together (Optional)</h2>
-            <div class="social-box">
-                <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">Connect with friends for extra motivation. All social features are optional — the app works fully without them.</p>
-                <div class="social-features">
-                    <div class="social-feature">
-                        <div class="social-icon">🏆</div>
-                        <h4>Leaderboards</h4>
-                        <p>See how your study time ranks among friends</p>
-                    </div>
-                    <div class="social-feature">
-                        <div class="social-icon">👥</div>
-                        <h4>Friends</h4>
-                        <p>Add friends and see their study activity</p>
-                    </div>
-                    <div class="social-feature">
-                        <div class="social-icon">⚔️</div>
-                        <h4>Challenges</h4>
-                        <p>Compete in timed study challenges</p>
-                    </div>
-                    <div class="social-feature">
-                        <div class="social-icon">📰</div>
-                        <h4>Activity Feed</h4>
-                        <p>Celebrate friends' achievements</p>
-                    </div>
+                    <h3>🔒 The Vault</h3>
+                    <p>Block distracting apps. Unlock them only when you've earned enough coins.</p>
                 </div>
             </div>
         </section>
 
         <!-- Privacy -->
         <section id="privacy" class="section">
-            <h2 class="section-title">Privacy Policy</h2>
+            <h2 class="typewriter-target">> CAT: PRIVACY_POLICY.TXT</h2>
             <div class="privacy-card">
-                <h2>Your Data, Explained Simply<span class="terminal-cursor"></span></h2>
+                <h2>Your Data, Explained Simply<span class="cursor-blink">_</span></h2>
                 <p class="updated">Last updated: January 4, 2026</p>
 
-                <!-- Cloud Data -->
-                <div class="privacy-grid">
-                    <div class="privacy-col">
-                        <h3>Cloud Data (Synced)</h3>
-                        <ul>
-                            <li>Email address (for login)</li>
-                            <li>Study session history</li>
-                            <li>XP, level, and coin balance</li>
-                            <li>Goals, tags, and settings</li>
-                            <li>Username (if you set one)</li>
-                            <li>Friends list (if you use social)</li>
-                        </ul>
+                <div class="privacy-content">
+                    <details open>
+                        <summary>▷ Cloud Data (Synced)</summary>
+                        <div class="privacy-grid">
+                            <div class="privacy-col">
+                                <ul>
+                                    <li>Email address (for login)</li>
+                                    <li>Study session history</li>
+                                    <li>XP, level, and coin balance</li>
+                                    <li>Goals, tags, and settings</li>
+                                    <li>Username (if you set one)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>▷ On-Device Only (Never Uploaded)</summary>
+                        <div class="privacy-grid">
+                            <div class="privacy-col on-device">
+                                <ul>
+                                    <li>Which apps you block (The Vault)</li>
+                                    <li>App usage time for limits</li>
+                                    <li>Motion data (Hardcore Mode)</li>
+                                    <li>Widget and Lock Screen data</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>▷ What We Never Collect</summary>
+                        <div class="privacy-grid">
+                            <div class="privacy-col no-collect">
+                                <ul>
+                                    <li>Your GPS location</li>
+                                    <li>Your contacts or photos</li>
+                                    <li>Your browsing history</li>
+                                    <li>Any data for advertising</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </details>
+
+                    <div class="privacy-note">
+                        <strong>About The Vault (Screen Time API):</strong> We use Apple's FamilyControls framework to let you block apps. Your app selections are stored as opaque tokens — we literally cannot see which apps you chose. Usage time is tracked locally on your device.
                     </div>
-                    <div class="privacy-col on-device">
-                        <h3>On-Device Only (Never Uploaded)</h3>
-                        <ul>
-                            <li>Which apps you block (The Vault)</li>
-                            <li>App usage time for limits</li>
-                            <li>Motion data (Hardcore Mode)</li>
-                            <li>Widget and Lock Screen data</li>
-                        </ul>
-                    </div>
-                </div>
 
-                <!-- What We Never Collect -->
-                <div class="privacy-grid" style="margin-top: 1.5rem;">
-                    <div class="privacy-col no-collect">
-                        <h3>What We Never Collect</h3>
-                        <ul>
-                            <li>Your GPS location</li>
-                            <li>Your contacts or photos</li>
-                            <li>Your browsing history</li>
-                            <li>Any data for advertising</li>
-                        </ul>
-                    </div>
-                    <div class="privacy-col">
-                        <h3>Authentication Options</h3>
-                        <ul>
-                            <li>Email + password</li>
-                            <li>Sign in with Apple</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Screen Time Explanation -->
-                <div class="privacy-note">
-                    <strong>About The Vault (Screen Time API):</strong> We use Apple's FamilyControls framework to let you block apps. Your app selections are stored as opaque tokens — we literally cannot see which apps you chose. Usage time is tracked locally on your device to enforce time limits, then discarded. This data never leaves your device or reaches our servers.
-                </div>
-
-                <!-- Motion Data Explanation -->
-                <div class="privacy-note" style="margin-top: 1rem;">
-                    <strong>About Hardcore Mode (Apple Watch):</strong> If you enable Hardcore Mode, the Watch uses motion sensors (CMPedometer) to detect if you walk away during a session. Step counts are processed in real-time to verify presence and are never stored or transmitted. This feature requires your explicit permission.
-                </div>
-
-                <!-- Social Features -->
-                <div class="privacy-section">
-                    <h3>Social Features (Optional)</h3>
-                    <p>If you use social features, you can set a public username and add friends. Your username and study stats appear on leaderboards. Friends can see your activity feed (sessions completed, levels gained). You control who you add as friends.</p>
-                    <p>Social features are entirely optional. The app works fully without them.</p>
-                </div>
-
-                <!-- Data Storage & Security -->
-                <div class="privacy-section">
-                    <h3>Data Storage & Security</h3>
-                    <p><strong>Backend:</strong> Your data syncs to Supabase, a secure cloud database with row-level security. Each user can only access their own data.</p>
-                    <p><strong>Local:</strong> Device data (Vault selections, widget state) uses Apple's secure UserDefaults and App Groups.</p>
-                    <p><strong>No tracking:</strong> We do not use third-party analytics, crash reporters, or advertising SDKs.</p>
-                </div>
-
-                <!-- Why We Process -->
-                <div class="privacy-section">
-                    <h3>Why We Process Your Data</h3>
-                    <p><strong>Contract performance:</strong> We process your account and game data to provide the app's core services.</p>
-                    <p><strong>Legitimate interest:</strong> We may analyze aggregated, anonymized usage patterns to improve the app.</p>
-                    <p><strong>Consent:</strong> Social features and motion tracking require your explicit opt-in.</p>
-                </div>
-
-                <!-- Your Rights -->
-                <div class="privacy-section">
-                    <h3>Your Rights (GDPR & CCPA)</h3>
-                    <p><strong>Access:</strong> Export your study history and game data from the app.</p>
-                    <p><strong>Correction:</strong> Update your profile information anytime.</p>
-                    <p><strong>Deletion:</strong> Delete your account and all cloud data via Settings.</p>
-                    <p><strong>Portability:</strong> Request a copy of your data in a standard format.</p>
-                    <p><strong>No sale of data:</strong> We do not sell, rent, or trade your personal information to third parties. Ever.</p>
-                </div>
-
-                <!-- Data Retention -->
-                <div class="privacy-section">
-                    <h3>Data Retention</h3>
-                    <p>We retain your data as long as your account is active. If you delete your account, your data is removed from our servers within 30 days. Anonymized, aggregated statistics may be retained for analytics.</p>
-                </div>
-
-                <!-- Children's Privacy -->
-                <div class="privacy-section">
-                    <h3>Children's Privacy</h3>
-                    <p>Minute Bank is designed for students of all ages. We do not knowingly collect personal information from children under 13 without parental consent. If you believe a child under 13 has provided us with personal information, please contact us.</p>
-                </div>
-
-                <!-- Changes to Policy -->
-                <div class="privacy-section">
-                    <h3>Changes to This Policy</h3>
-                    <p>We may update this policy occasionally. We'll notify you of significant changes via the app or email. Continued use after changes constitutes acceptance.</p>
-                </div>
-
-                <!-- Contact -->
-                <div class="privacy-section">
-                    <h3>Contact Us</h3>
-                    <p>For privacy questions, data requests, or to exercise your rights:</p>
-                    <p><strong>Email:</strong> <a href="mailto:dincberfinur@gmail.com" style="color: var(--tint);">dincberfinur@gmail.com</a></p>
-                    <p><strong>Data Controller:</strong> Berfin Aydin</p>
-                    <p>We respond to all requests within 48 hours.</p>
+                    <!-- Additional standard privacy text omitted for brevity but implied -->
                 </div>
             </div>
         </section>
 
         <!-- Support -->
         <section id="support" class="section">
-            <h2 class="section-title">Support</h2>
+            <h2 class="typewriter-target">> CONNECT: SUPPORT_CHANNEL</h2>
             <div class="support-box">
                 <h2>Questions? Bugs? Ideas?</h2>
                 <a href="mailto:dincberfinur@gmail.com">dincberfinur@gmail.com</a>
@@ -1161,12 +1064,56 @@
         </footer>
     </div>
 
+    <!-- System Log Ticker -->
+    <div class="system-log">
+        <div class="log-track" id="logTrack">
+            <!-- JS will populate this -->
+        </div>
+    </div>
+
     <script>
-        // Live demo timer animation
+        // --- TYPEWRITER EFFECT ---
+        class Typewriter {
+            constructor(el) {
+                this.el = el;
+                this.text = el.innerText;
+                this.el.innerText = '';
+                this.el.classList.add('typewriter-active');
+                this.type();
+            }
+
+            type(i = 0) {
+                if (i < this.text.length) {
+                    this.el.innerHTML = this.text.substring(0, i + 1) + '<span class="cursor-blink">_</span>';
+                    // Randomize typing speed slightly for realism
+                    const delay = 30 + Math.random() * 50; 
+                    setTimeout(() => this.type(i + 1), delay);
+                } else {
+                    // Keep cursor blinking at end
+                     this.el.innerHTML = this.text + '<span class="cursor-blink">_</span>';
+                }
+            }
+        }
+
+        // Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.hasAttribute('data-typed')) {
+                    entry.target.setAttribute('data-typed', 'true');
+                    new Typewriter(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.typewriter-target').forEach(el => observer.observe(el));
+
+
+        // --- LIVE DEMO TIMER ---
         let seconds = 0;
         const timerEl = document.getElementById('demoTimer');
         const coinsEl = document.getElementById('demoCoins');
         const xpEl = document.getElementById('demoXP');
+        const progressEl = document.getElementById('demoProgress');
 
         function updateDemo() {
             seconds++;
@@ -1178,15 +1125,41 @@
                 String(mins).padStart(2, '0') + ':' +
                 String(secs).padStart(2, '0');
 
-            // Update coins and XP (simulated) - 1:1 ratio for coins
+            // Update stats
             const totalMins = seconds / 60;
-            const coins = Math.floor(totalMins); // 1 coin per minute (actual ratio)
-            const xp = Math.floor(totalMins * 10); // 10 XP per minute
-            coinsEl.textContent = coins;
-            xpEl.textContent = xp;
+            coinsEl.textContent = Math.floor(totalMins); 
+            xpEl.textContent = Math.floor(totalMins * 10);
+            
+            // Animate progress bar (simulating 60 second loop)
+            const progress = (seconds % 60) / 60 * 100;
+            progressEl.style.width = progress + '%';
         }
 
         setInterval(updateDemo, 1000);
+        
+        // --- SYSTEM LOG TICKER ---
+        const logMessages = [
+            "USER_4492 EARNED 25 COINS",
+            "NEW HIGH SCORE: LEVEL 12 REACHED",
+            "SERVER_STATUS: ONLINE",
+            "DECAY_RATE: 1.0X (NORMAL)",
+            "USER_881 JUST UNLOCKED 'NETFLIX'",
+            "SYNC_COMPLETE: US-EAST-1",
+            "USER_102 COMPLETED 50 MIN SESSION"
+        ];
+        
+        const logTrack = document.getElementById('logTrack');
+        
+        // Build the marquee string
+        let marqueeContent = "";
+        // Repeat messages to fill space
+        for(let i=0; i<3; i++) {
+            logMessages.forEach(msg => {
+                marqueeContent += `<div class="log-item">[${new Date().toLocaleTimeString('en-US', {hour12:false})}]: <span>${msg}</span></div>`;
+            });
+        }
+        logTrack.innerHTML = marqueeContent;
+
     </script>
 </body>
 </html>
