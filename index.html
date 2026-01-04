@@ -3,105 +3,549 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minute Bank - Gamified Study Timer</title>
+    <title>Minute Bank — Earn Your Fun</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0a0a0a;
+            --bg-card: #111111;
             --text: #e8e8e8;
             --tint: #d97757;
-            --muted: #888;
+            --teal: #57d9bb;
+            --muted: #666;
+            --border: rgba(255,255,255,0.1);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-family: 'JetBrains Mono', monospace;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Scanline effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,0.1) 0px,
+                rgba(0,0,0,0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
             padding: 2rem;
-            max-width: 800px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 3rem;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .logo-ascii {
+            color: var(--tint);
+            font-size: 0.6rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            white-space: pre;
+            display: inline-block;
+        }
+
+        @media (max-width: 600px) {
+            .logo-ascii { font-size: 0.4rem; }
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .tagline span {
+            color: var(--teal);
+        }
+
+        .cta-badge {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px dashed var(--tint);
+            padding: 0.75rem 1.5rem;
+            color: var(--tint);
+            font-size: 0.875rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover { color: var(--tint); }
+
+        /* How It Works */
+        .section { margin-bottom: 4rem; }
+
+        .section-title {
+            color: var(--tint);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .flow-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -0.75rem;
+            left: 1rem;
+            background: var(--bg);
+            padding: 0 0.5rem;
+            color: var(--tint);
+            font-size: 0.75rem;
+        }
+
+        .flow-step h3 {
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-step p {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .flow-step .icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+        }
+
+        .feature h3 {
+            color: var(--teal);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature p {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        /* The Vault */
+        .vault-box {
+            background: var(--bg-card);
+            border: 2px dashed var(--tint);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .vault-box h3 {
+            color: var(--tint);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .vault-box p {
+            color: var(--muted);
+            font-size: 0.85rem;
+            max-width: 500px;
             margin: 0 auto;
         }
-        h1, h2, h3 { color: var(--tint); margin: 1.5rem 0 0.75rem; }
-        h1 { font-size: 2rem; border-bottom: 2px dashed var(--tint); padding-bottom: 0.5rem; }
-        h2 { font-size: 1.25rem; }
-        p, li { margin-bottom: 0.75rem; }
-        ul { padding-left: 1.5rem; }
-        a { color: var(--tint); }
-        .section {
-            border: 1px solid #333;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
+
+        .vault-steps {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
         }
-        .muted { color: var(--muted); font-size: 0.875rem; }
-        .nav { margin-bottom: 2rem; }
-        .nav a { margin-right: 1rem; }
+
+        .vault-step {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            color: var(--text);
+        }
+
+        .vault-step .arrow {
+            color: var(--tint);
+            margin-left: 0.5rem;
+        }
+
+        /* Privacy Section */
+        .privacy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+        }
+
+        .privacy-card h2 {
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .privacy-card .updated {
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .privacy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .privacy-col h3 {
+            font-size: 0.8rem;
+            color: var(--teal);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .privacy-col ul {
+            list-style: none;
+        }
+
+        .privacy-col li {
+            font-size: 0.8rem;
+            color: var(--muted);
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .privacy-col li:last-child { border-bottom: none; }
+
+        .privacy-col li::before {
+            content: '→ ';
+            color: var(--tint);
+        }
+
+        .privacy-col.no-collect li::before {
+            content: '✗ ';
+            color: #e55;
+        }
+
+        .privacy-note {
+            background: var(--bg);
+            border-left: 3px solid var(--teal);
+            padding: 1rem 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        /* Support */
+        .support-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .support-box h2 {
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .support-box a {
+            color: var(--tint);
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .support-box a:hover {
+            text-decoration: underline;
+        }
+
+        .support-box p {
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        footer p {
+            color: var(--muted);
+            font-size: 0.75rem;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: var(--tint);
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            margin-left: 4px;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Smooth scroll */
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <a href="#about">About</a>
-        <a href="#privacy">Privacy Policy</a>
-        <a href="#support">Support</a>
-    </nav>
+    <div class="container">
+        <!-- Hero -->
+        <header class="hero">
+            <div class="logo-ascii">
+ ███╗   ███╗██╗███╗   ██╗██╗   ██╗████████╗███████╗
+ ████╗ ████║██║████╗  ██║██║   ██║╚══██╔══╝██╔════╝
+ ██╔████╔██║██║██╔██╗ ██║██║   ██║   ██║   █████╗
+ ██║╚██╔╝██║██║██║╚██╗██║██║   ██║   ██║   ██╔══╝
+ ██║ ╚═╝ ██║██║██║ ╚████║╚██████╔╝   ██║   ███████╗
+ ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚══════╝
+                ██████╗  █████╗ ███╗   ██╗██╗  ██╗
+                ██╔══██╗██╔══██╗████╗  ██║██║ ██╔╝
+                ██████╔╝███████║██╔██╗ ██║█████╔╝
+                ██╔══██╗██╔══██║██║╚██╗██║██╔═██╗
+                ██████╔╝██║  ██║██║ ╚████║██║  ██╗
+                ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝
+            </div>
+            <p class="tagline">Study hard. <span>Earn minutes.</span> Play guilt-free.</p>
+            <div class="cta-badge">[ COMING SOON TO iOS ]</div>
+        </header>
 
-    <h1>Minute Bank</h1>
-    <p>A gamified study timer for students who want to earn guilt-free fun time.</p>
+        <!-- Navigation -->
+        <nav class="nav">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#features">Features</a>
+            <a href="#the-vault">The Vault</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#support">Support</a>
+        </nav>
 
-    <section id="about" class="section">
-        <h2>About the App</h2>
-        <p>Minute Bank helps students overcome procrastination through gamified accountability:</p>
-        <ul>
-            <li><strong>Study</strong> — Complete focused study sessions (25+ minutes)</li>
-            <li><strong>Earn</strong> — Get "minute coins" based on your study time</li>
-            <li><strong>Spend</strong> — Unlock rewards like shows, games, or social media</li>
-            <li><strong>Focus</strong> — Optionally block distracting apps during study</li>
-        </ul>
-    </section>
+        <!-- How It Works -->
+        <section id="how-it-works" class="section">
+            <h2 class="section-title">How It Works</h2>
+            <div class="flow">
+                <div class="flow-step" data-step="01">
+                    <div class="icon">⏱</div>
+                    <h3>Study</h3>
+                    <p>Start a focus session. Minimum 25 minutes to earn rewards.</p>
+                </div>
+                <div class="flow-step" data-step="02">
+                    <div class="icon">🪙</div>
+                    <h3>Earn</h3>
+                    <p>Get minute coins based on study time × your level ratio.</p>
+                </div>
+                <div class="flow-step" data-step="03">
+                    <div class="icon">🎯</div>
+                    <h3>Spend</h3>
+                    <p>Buy time in your reward banks — shows, games, socials.</p>
+                </div>
+                <div class="flow-step" data-step="04">
+                    <div class="icon">🎮</div>
+                    <h3>Enjoy</h3>
+                    <p>Use your earned time. Guilt-free. You earned it.</p>
+                </div>
+            </div>
+        </section>
 
-    <section id="privacy" class="section">
-        <h2>Privacy Policy</h2>
-        <p class="muted">Last updated: January 4, 2026</p>
+        <!-- Features -->
+        <section id="features" class="section">
+            <h2 class="section-title">Features</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>📊 Level Progression</h3>
+                    <p>15 levels with improving study-to-reward ratios. Level up by accumulating XP from study sessions.</p>
+                </div>
+                <div class="feature">
+                    <h3>🏦 Time Banks</h3>
+                    <p>Create custom reward categories. Track remaining time for each. Go into debt if you must — then study to pay it back.</p>
+                </div>
+                <div class="feature">
+                    <h3>⌚ Apple Watch</h3>
+                    <p>Start, pause, and complete sessions from your wrist. Full sync with your iPhone.</p>
+                </div>
+                <div class="feature">
+                    <h3>🏝️ Dynamic Island</h3>
+                    <p>Live Activities show your timer progress. Always visible, never distracting.</p>
+                </div>
+                <div class="feature">
+                    <h3>🎲 Lucky Sessions</h3>
+                    <p>Random chance for 2× coin multiplier. A little excitement to keep you going.</p>
+                </div>
+                <div class="feature">
+                    <h3>📉 XP Decay</h3>
+                    <p>Skip studying and watch your XP decay. Stay consistent or lose your level progress.</p>
+                </div>
+            </div>
+        </section>
 
-        <h3>Data We Collect</h3>
-        <ul>
-            <li><strong>Account info:</strong> Email address (for login via Supabase Auth)</li>
-            <li><strong>Study data:</strong> Session timestamps, durations, tags, and earned rewards</li>
-            <li><strong>App preferences:</strong> Settings, goals, and customization choices</li>
-        </ul>
+        <!-- The Vault -->
+        <section id="the-vault" class="section">
+            <h2 class="section-title">The Vault</h2>
+            <div class="vault-box">
+                <h3>🔒 Block Your Guilt Apps</h3>
+                <p>Select apps you find distracting. Lock them in The Vault during study sessions. Spend earned coins to unlock them for a set amount of usage time. When time runs out, they auto-lock again.</p>
+                <div class="vault-steps">
+                    <span class="vault-step">Pick apps<span class="arrow">→</span></span>
+                    <span class="vault-step">Lock vault<span class="arrow">→</span></span>
+                    <span class="vault-step">Study<span class="arrow">→</span></span>
+                    <span class="vault-step">Earn coins<span class="arrow">→</span></span>
+                    <span class="vault-step">Unlock<span class="arrow">→</span></span>
+                    <span class="vault-step">Auto-relock</span>
+                </div>
+            </div>
+        </section>
 
-        <h3>Data We Do NOT Collect</h3>
-        <ul>
-            <li>Which specific apps you block or use</li>
-            <li>Screen Time or usage statistics</li>
-            <li>Screenshots or screen recordings</li>
-            <li>Location data</li>
-        </ul>
+        <!-- Privacy -->
+        <section id="privacy" class="section">
+            <h2 class="section-title">Privacy Policy</h2>
+            <div class="privacy-card">
+                <h2>Your Data, Explained Simply<span class="terminal-cursor"></span></h2>
+                <p class="updated">Last updated: January 4, 2026</p>
 
-        <h3>Screen Time API</h3>
-        <p>Minute Bank uses Apple's Screen Time API to let you block distracting apps during study sessions. This feature is entirely optional and self-directed. All app blocking data stays on your device — we cannot see which apps you block or how long you use them.</p>
+                <div class="privacy-grid">
+                    <div class="privacy-col">
+                        <h3>What We Store</h3>
+                        <ul>
+                            <li>Email (for login)</li>
+                            <li>Study session history</li>
+                            <li>Goals & settings</li>
+                            <li>Level & XP progress</li>
+                        </ul>
+                    </div>
+                    <div class="privacy-col no-collect">
+                        <h3>What We Never See</h3>
+                        <ul>
+                            <li>Which apps you block</li>
+                            <li>Your Screen Time data</li>
+                            <li>Screenshots or recordings</li>
+                            <li>Your location</li>
+                        </ul>
+                    </div>
+                </div>
 
-        <h3>Data Storage</h3>
-        <p>Your study data syncs to Supabase (cloud database) so you can access it across devices. Your blocked app selections stay on-device only.</p>
+                <div class="privacy-note">
+                    <strong>About The Vault:</strong> We use Apple's Screen Time API to let you block apps. This is 100% on-device. We cannot see which apps you select, how long you use them, or anything about your Screen Time. Apple designed it this way for privacy.
+                </div>
 
-        <h3>Data Sharing</h3>
-        <p>We do not sell, rent, or share your personal data with third parties. We do not display ads.</p>
+                <div class="privacy-grid" style="margin-top: 2rem;">
+                    <div class="privacy-col">
+                        <h3>Data Storage</h3>
+                        <ul>
+                            <li>Cloud sync via Supabase</li>
+                            <li>Blocked apps: device only</li>
+                            <li>No third-party analytics</li>
+                            <li>No ads, ever</li>
+                        </ul>
+                    </div>
+                    <div class="privacy-col">
+                        <h3>Your Rights</h3>
+                        <ul>
+                            <li>Export your data anytime</li>
+                            <li>Delete account on request</li>
+                            <li>We respond within 48 hrs</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <h3>Data Deletion</h3>
-        <p>You can delete your account and all associated data by contacting us at the email below.</p>
+        <!-- Support -->
+        <section id="support" class="section">
+            <h2 class="section-title">Support</h2>
+            <div class="support-box">
+                <h2>Questions? Bugs? Ideas?</h2>
+                <a href="mailto:dincberfinur@gmail.com">dincberfinur@gmail.com</a>
+                <p>Response time: usually within 48 hours</p>
+            </div>
+        </section>
 
-        <h3>Children's Privacy</h3>
-        <p>Minute Bank is designed for students of all ages. We do not knowingly collect data from children under 13 without parental consent.</p>
-    </section>
-
-    <section id="support" class="section">
-        <h2>Support</h2>
-        <p>Having issues or questions? Contact us:</p>
-        <p><strong>Email:</strong> <a href="mailto:dincberfinur@gmail.com">dincberfinur@gmail.com</a></p>
-        <p class="muted">We typically respond within 48 hours.</p>
-    </section>
-
-    <footer class="muted" style="margin-top: 2rem; text-align: center;">
-        <p>&copy; 2026 Berfin Aydin. All rights reserved.</p>
-    </footer>
+        <!-- Footer -->
+        <footer>
+            <p>Built with focus by Berfin Aydin — © 2026</p>
+            <p style="margin-top: 0.5rem;">Minute Bank for iOS</p>
+        </footer>
+    </div>
 </body>
 </html>
